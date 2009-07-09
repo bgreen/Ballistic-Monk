@@ -16,7 +16,7 @@ class FPS_counter {
 	
 	void mark();
 	
-	void show(SDL_Surface* screen);
+	void show(SDL_Surface*);
 	
-	void delay_until(int t);
+	void delay_until(int);
 };

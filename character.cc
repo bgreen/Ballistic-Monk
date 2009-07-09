@@ -3,12 +3,15 @@
 #include "character.h"
 
 Character::Character() {
-	x = 0;
-	y = 0;
 	xVel = 0, yVel = 0;
 	speed = 5;
+	layer = 0;
+}
+
+Player::Player() {
+	layer = 1;
 	sprite = SDL_CreateRGBSurface(SDL_SWSURFACE, 32, 32, 16, 0,0,0,0);
-	SDL_FillRect(sprite, NULL, 0x0F00);
+	SDL_FillRect(sprite, NULL, SDL_MapRGB(sprite->format, 0x00, 0xFF, 0x00));
 }
 
 void Player::handle_input() {
@@ -35,14 +38,13 @@ void Player::handle_input() {
 }
 	
 void Player::handle_move() {
-	x += speed * xVel;
-	y += speed * yVel;
+	position.x += speed * xVel;
+	position.y += speed * yVel;
 }
 
-void Player::handle_show(SDL_Surface* screen) {
-	SDL_Rect offset;
-	offset.x = x;
-	offset.y = y;
-	SDL_BlitSurface(sprite, NULL, screen, &offset);
+void Player::collide(Object* other) {
+	printf("Player says ouch\n");
+	fflush(stdout);
+	return;
 }
 
