@@ -8,18 +8,17 @@
 #endif
 
 class Character: public Object {
-	protected:
-	int speed;
-	int xVel, yVel;
-	
 	public:
+	int speed;
+	float xVel, yVel;
+
 	Character();
 	virtual void handle_move() {
 		return;
 	}
 	
 	char* pos_str(char* buffer) {
-		sprintf(buffer, "%3d, %3d @ %2d, %2d\n", position.x, position.y, xVel, yVel);
+		sprintf(buffer, "%3d, %3d @ %2f, %2f\n", position.x, position.y, xVel, yVel);
 		return buffer;
 	}
 };

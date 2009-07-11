@@ -53,10 +53,10 @@ bool Object::is_hit(Object* other) {
 			b_top = other->position.y + (*other_iter).y;
 			b_bottom = b_top + (*other_iter).h;
 			// hit????
-			if(a_bottom < b_top) return false;
-			if(a_top > b_bottom) return false;
-			if(a_right < b_left) return false;
-			if(a_left > b_right) return false;
+			if(a_bottom <= b_top) return false;
+			if(a_top >= b_bottom) return false;
+			if(a_right <= b_left) return false;
+			if(a_left >= b_right) return false;
 			other_iter++;
 		}
 		this_iter++;

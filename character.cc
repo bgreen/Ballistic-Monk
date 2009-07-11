@@ -43,8 +43,8 @@ void Player::handle_move() {
 }
 
 void Player::collide(Object* other) {
-	printf("Player says ouch\n");
-	fflush(stdout);
+	//printf("Player says ouch\n");
+	//fflush(stdout);
 	return;
 }
 

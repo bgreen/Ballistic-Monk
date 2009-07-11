@@ -59,10 +59,14 @@ int main(int argc, char *argv[])
     characters.push_back(&you);
     players.push_back(&you);
     
-    // A test wall
-    SDL_Rect dim = {0, 480-10, 640, 10};
+    // A test wall or two
+    SDL_Rect dim = {220, 235, 200, 10};
     Wall w (dim);
     objects.push_back(&w);
+    
+    SDL_Rect dim2 = {315, 140, 10, 200};
+    Wall w2 (dim2);
+    objects.push_back(&w2);
     
     FPS_counter fps;
     
@@ -91,9 +95,16 @@ int main(int argc, char *argv[])
     	/*	Logic	*/
     	/************/
     	
+    	// move all characters
+    	std::vector<Character*>::iterator character_iter;
+    	character_iter = characters.begin();
+    	while(character_iter != characters.end()) {
+    		(*character_iter)->handle_move();
+    		character_iter++;
+    	}
+    	
     	// check for hits between all character-object pairs
     	std::queue<collision_pair> collisions;
-    	std::vector<Character*>::iterator character_iter;
     	std::vector<Object*>::iterator object_iter;
     	character_iter = characters.begin();
     	while(character_iter != characters.end()) {
@@ -119,12 +130,7 @@ int main(int argc, char *argv[])
     		collisions.pop();
     	}
     	
-    	// move all characters
-    	character_iter = characters.begin();
-    	while(character_iter != characters.end()) {
-    		(*character_iter)->handle_move();
-    		character_iter++;
-    	}
+    	
     	
     	/****************/
     	/*	Rendering	*/
