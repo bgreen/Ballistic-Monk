@@ -6,6 +6,8 @@ Character::Character() {
 	xVel = 0, yVel = 0;
 	speed = 5;
 	layer = 0;
+	before.x = 0;
+	before.y = 0;
 }
 
 Player::Player() {
@@ -38,6 +40,8 @@ void Player::handle_input() {
 }
 	
 void Player::handle_move() {
+	before.x = position.x;
+	before.y = position.y;
 	position.x += speed * xVel;
 	position.y += speed * yVel;
 }

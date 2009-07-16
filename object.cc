@@ -5,7 +5,8 @@
 	
 void Object::handle_show(SDL_Surface* scene[]) {
 	SDL_Rect tmp;
-	tmp = position;
+	tmp.x = position.x;
+	tmp.y = position.y;
 	SDL_BlitSurface(sprite, NULL, scene[layer], &tmp);
 }
 

@@ -11,14 +11,18 @@ class Character: public Object {
 	public:
 	int speed;
 	float xVel, yVel;
+	struct coord before;
 
 	Character();
+	
+	int hit_where(Object* other);
+	
 	virtual void handle_move() {
 		return;
 	}
 	
 	char* pos_str(char* buffer) {
-		sprintf(buffer, "%3d, %3d @ %2f, %2f\n", position.x, position.y, xVel, yVel);
+		sprintf(buffer, "%3f, %3f @ %2f, %2f\n", position.x, position.y, xVel, yVel);
 		return buffer;
 	}
 };

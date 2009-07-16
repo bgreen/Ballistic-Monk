@@ -1,10 +1,16 @@
 #include <SDL/SDL.h>
 #include <vector>
 
+
+struct coord {
+	float x;
+	float y;
+};
+
 class Object {
 	public:
 	int layer;
-	SDL_Rect position;
+	struct coord position;
 	std::vector<SDL_Rect> hitboxes;
 	
 	Object();
