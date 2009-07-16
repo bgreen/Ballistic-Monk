@@ -2,11 +2,6 @@
 #include "character.h"
 #include "math.h"
 
-#define HIT_TOP (0b0001)
-#define HIT_BOTTOM (0b0010)
-#define HIT_LEFT (0b0100)
-#define HIT_RIGHT (0b1000)
-
 Wall::Wall(SDL_Rect dim) {
 	position.x = dim.x;
 	position.y = dim.y;
@@ -26,7 +21,7 @@ void Wall::collide(Object* other) {
 		// distance to get here
 		float dx, dy;
 		bool top, bottom, left, right;
-	} path[4];
+	} path;
 	// Make sure the object is a movable character (it really should be)
 	Character* o = dynamic_cast<Character*>(other);
 	if(o != NULL) {
@@ -54,107 +49,79 @@ void Wall::collide(Object* other) {
 			return;
 		}
 		
-		// calculate the lines represented by the movement
-		// of each vertex of the hitbox
-		//path[0] = {o->position.x, o->position.y, o->speed * o->xVel, o->speed * o->yVel};
-		path[0].x = o->position.x;
-		path[0].y = o->position.y;
-		path[0].dx = o->speed * o->xVel;
-		path[0].dy = o->speed * o->yVel;
-		path[0].top = true;
-		path[0].left = true;
-		path[1] = path[0];
-		path[1].x += o->hitboxes.front().w;
-		path[1].left = false;
-		path[2] = path[1];
-		path[2].y += o->hitboxes.front().h;
-		path[2].top = false;
-		path[3] = path[2];
-		path[3].x -= o->hitboxes.front().w;
-		path[3].left = true;
-		
+		// calculate the line representing the movement of the object
+		path.x = o->position.x;
+		path.y = o->position.y;
+		path.dx = o->speed * o->xVel;
+		path.dy = o->speed * o->yVel;
+		path.top = true;
+		path.left = true;
+		// the upper and lower bounds for the movement vector
+		float upper_bound, lower_bound;
+		if(o->yVel > 0) {
+			path.y += o->hitboxes.front().h;
+			path.top = false;
+			upper_bound = path.y;
+			lower_bound = path.y - path.dy;
+		} else {
+			upper_bound = path.y - path.dy;
+			lower_bound = path.y;
+		}
+		if(o->xVel > 0) {
+			path.x += o->hitboxes.front().w;
+			path.left = false;
+		}
+		enum side_enum {top = 0, bottom = 1, left = 2, right = 3};
 		// check which movement vectors intersect with the hitbox and where
 		mv_vector hit_vector;
 		float max_dist = 0;
 		int hit_where = NULL;
-		for(int i=0; i<4; i++) {
-			//printf("%d:\nx=%03f;y=%03f;dx=%03f;dy=%03f\n", i, path[i].x, path[i].y, path[i].dx, path[i].dy);
-			// we need to define the upper and lower bound for the
-			// intersection point, so we know whether it is on the
-			// mv_vector or not
-			float upper_bound, lower_bound;
-			if(path[i].dy > 0) {
-				upper_bound = path[i].y;
-				lower_bound = path[i].y - path[i].dy;
-			} else {
-				upper_bound = path[i].y - path[i].dy;
-				lower_bound = path[i].y;
-			}
+		// general case:
+		// derive b (y = mx + b) using a line and a point
+		float m = path.dy/path.dx;
+		float b = path.y - m * path.x;
+		// determine where this line intersects
+		for(int side=0; side<4; side++) {
+			if(side == left && path.left) continue;
+			if(side == right && !path.left) continue;
+			if(side == top && path.top) continue;
+			if(side == bottom && !path.top) continue;
 			
-			// general case:
-			// derive b (y = mx + b) using a line and a point
-			float m = path[i].dy/path[i].dx;
-			float b = path[i].y - m * path[i].x;
-			//printf("m=%3f;b=%3f\n", m, b);
-			// determine where this line intersects
-			// on the left?
-			float x = position.x;
-			float y = m * x + b;
-			if((lower_bound <= y) && (y <= upper_bound) && !path[i].left) {
-				// hit on the left
-				//printf("hit left: x=%3.1f;y=%3.1f\n", x, y); fflush(stdout);
-				float dist = sqrt(pow(x - path[i].x, 2) + pow(y - path[i].y, 2));
-				if(dist > max_dist) {
-					max_dist = dist;
-					hit_vector = path[i];
-					hit_where = HIT_LEFT;
-				}
+			float x, y;
+			switch(side) {
+				case top:
+					y = position.y;
+					x = (y - b) / m;
+					break;
+				case bottom:
+					y = (position.y + hitboxes.front().h);
+					x = (y - b) / m;
+					break;
+				case left:
+					x = position.x;
+					y = m * x + b;
+					break;
+				case right:
+					x = (position.x + hitboxes.front().w);
+					y = m * x + b;
+					break;
 			}
-			// on the right?
-			x = (position.x + hitboxes.front().w);
-			y = m * x + b;
-			if((lower_bound <= y) && (y <= upper_bound) && path[i].left) {
-				// hit on the right
-				//printf("hit right: x=%3.1f;y=%3.1f\n", x, y); fflush(stdout);
-				float dist = sqrt(pow(x - path[i].x, 2) + pow(y - path[i].y, 2));
+			if((lower_bound <= y) && (y <= upper_bound)) {
+				float dist = sqrt(pow(x - path.x, 2) + pow(y - path.y, 2));
 				if(dist > max_dist) {
 					max_dist = dist;
-					hit_vector = path[i];
-					hit_where = HIT_RIGHT;
-				}
-			}
-			// on the top?
-			y = position.y;
-			x = (y - b) / m;
-			if((lower_bound <= y) && (y <= upper_bound) && !path[i].top) {
-				// hit on the top
-				//printf("hit top: x=%3.1f;y=%3.1f\n", x, y); fflush(stdout);
-				float dist = sqrt(pow(x - path[i].x, 2) + pow(y - path[i].y, 2));
-				if(dist > max_dist) {
-					max_dist = dist;
-					hit_vector = path[i];
-					hit_where = HIT_TOP;
-				}
-			}
-			// on the bottom?
-			y = (position.y + hitboxes.front().h);
-			x = (y - b) / m;
-			if((lower_bound <= y) && (y <= upper_bound) && path[i].top) {
-				// hit on the bottom
-				//printf("hit bottom: x=%3.1f;y=%3.1f\n", x, y); fflush(stdout);
-				float dist = sqrt(pow(x - path[i].x, 2) + pow(y - path[i].y, 2));
-				if(dist > max_dist) {
-					max_dist = dist;
-					hit_vector = path[i];
-					hit_where = HIT_BOTTOM;
+					hit_vector = path;
+					hit_where = side;
 				}
 			}
 		}
+		
+		
 		//printf("diag: 0x%X\n", hit_where); fflush(stdout);
 		float mag = max_dist / sqrt(pow(hit_vector.dx, 2) + pow(hit_vector.dy, 2));
-		if(hit_where == HIT_TOP || hit_where == HIT_BOTTOM) {
+		if(hit_where == top || hit_where == bottom) {
 			o->position.y -= mag * hit_vector.dy;
-		} else if(hit_where == HIT_LEFT || hit_where == HIT_RIGHT) {
+		} else if(hit_where == left || hit_where == right) {
 			o->position.x -= mag * hit_vector.dx;
 		}
 		
