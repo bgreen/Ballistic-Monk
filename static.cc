@@ -1,7 +1,9 @@
+
+#include <stdio.h>
+
 #include "static.h"
 #include "character.h"
 #include "math.h"
-#include <stdio.h>
 
 Wall::Wall(SDL_Rect dim) {
 	position.x = dim.x;
@@ -124,11 +126,10 @@ void Wall::collide(Object* other, double dt) {
 					y = m * x + b;
 					break;
 			}
-			printf("%d:[%f,%f]; (%f,%f)\n",side, lower_bound, upper_bound, x,y);
 			if((lower_bound <= y) && (y <= upper_bound)) {
-				float dist = sqrt(pow(x - path.x, 2) + pow(y - path.y, 2));
-				if(dist > max_dist) {
-					max_dist = dist;
+				float dist_squared = pow(x - path.x, 2) + pow(y - path.y, 2);
+				if(dist_squared > max_dist) {
+					max_dist = dist_squared;
 					hit_vector = path;
 					hit_where = side;
 				}
@@ -136,21 +137,16 @@ void Wall::collide(Object* other, double dt) {
 		}
 		
 		// compute how far to move the object back
-		float mag = max_dist / sqrt(pow(hit_vector.dx, 2) + pow(hit_vector.dy, 2));
 		if(hit_where == top) {
-			printf("hit top\n"); fflush(stdout);
 			o->position.y = position.y + o->hitboxes.front().h;
 			o->vel.y = 0;
 		} else if(hit_where == bottom) {
-			printf("hit bottom\n"); fflush(stdout);
 			o->position.y = position.y - hitboxes.front().h;
 			o->vel.y = 0;
 		} else if(hit_where == left) {
-			printf("hit left\n"); fflush(stdout);
 			o->position.x = position.x - o->hitboxes.front().w;
 			o->vel.x = 0;
 		} else if(hit_where == right) {
-			printf("hit right\n"); fflush(stdout);
 			o->position.x = position.x + hitboxes.front().w;
 			o->vel.x = 0;
 		}

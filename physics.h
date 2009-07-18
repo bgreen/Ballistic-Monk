@@ -1,4 +1,10 @@
+#ifndef _INC_PHYSICS
+#define _INC_PHYSICS
+
 #include "stdint.h"
+
+#define AIR_VISCOSITY 0.2
+#define PIXELS_PER_METER 16.67
 
 class PVector {
 	public:
@@ -33,3 +39,5 @@ class Timer {
 	unsigned int dt_ms();
 	double dt_s();
 };
+
+#endif

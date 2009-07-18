@@ -1,5 +1,10 @@
+#ifndef _INC_OBJECT
+#define _INC_OBJECT
+
+
 #include <SDL/SDL.h>
 #include <vector>
+
 #include "physics.h"
 
 struct coord {
@@ -33,3 +38,5 @@ struct collision_pair {
 	Object* a;
 	Object* b;
 };
+
+#endif

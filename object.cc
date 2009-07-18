@@ -1,7 +1,7 @@
-#ifndef INC_OBJECT
-#define INC_OBJECT
+
+#include "SDL/SDL.h"
+
 #include "object.h"
-#endif
 	
 void Object::handle_show(SDL_Surface* scene[]) {
 	SDL_Rect tmp;

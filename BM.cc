@@ -5,6 +5,7 @@
 #include <SDL/SDL_ttf.h>
 
 #include "character.h"
+#include "object.h"
 #include "fps_counter.h"
 #include "static.h"
 

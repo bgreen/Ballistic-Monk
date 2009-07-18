@@ -1,11 +1,12 @@
+#ifndef _INC_CHARACTER
+#define _INC_CHARACTER
+
 #include <stdlib.h>
 #include <queue>
 #include <SDL/SDL.h>
 
-#ifndef INC_OBJECT
-#define INC_OBJECT
 #include "object.h"
-#endif
+#include "physics.h"
 
 class Character: public Object {
 	public:
@@ -33,3 +34,5 @@ class Player: public Character {
 	void collide(Object* other, double dt);
 	void handle_input();
 };
+
+#endif

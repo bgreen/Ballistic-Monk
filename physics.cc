@@ -1,7 +1,11 @@
+
+#include <algorithm>
+
+#include <SDL/SDL.h>
+
 #include "physics.h"
 #include "math.h"
-#include <algorithm>
-#include "SDL/SDL.h"
+
 
 /************/
 /*	PVector	*/

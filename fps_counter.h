@@ -1,3 +1,6 @@
+#ifndef _INC_FPS_COUNTER
+#define _INC_FPS_COUNTER
+
 #include <stdlib.h>
 
 #include <SDL/SDL.h>
@@ -20,3 +23,5 @@ class FPS_counter {
 	
 	void delay_until(int);
 };
+
+#endif

@@ -1,4 +1,7 @@
 
+#include "SDL/SDL.h"
+#include "SDL/SDL_ttf.h"
+
 #include "fps_counter.h"
 
 FPS_counter::FPS_counter() {

@@ -1,6 +1,9 @@
+
 #include <SDL/SDL.h>
 #include <queue>
+
 #include "character.h"
+#include "physics.h"
 
 Character::Character() {
 	layer = 0;
@@ -8,14 +11,19 @@ Character::Character() {
 	// in kg
 	mass = 80;
 	vel = PVector();
-	weight = PVector(0, mass*(-9.81*16.67));
+	weight = PVector(0, mass*(-9.81 * PIXELS_PER_METER));
 	force = PVector();
 	force += weight;
 }
 
 void Character::handle_move(double dt) {
+	// apply acceleration
 	vel.x += dt * force.x/mass;
 	vel.y += dt * force.y/mass;
+	
+	// apply a set air viscosity
+	vel.x *= (1 - AIR_VISCOSITY * dt);
+	vel.y *= (1 - AIR_VISCOSITY * dt);
 	
 	// 30 pixels = 1.8 meters
 	// 16.67 pixels/meter
@@ -35,8 +43,8 @@ Player::Player() {
 
 void Player::handle_input() {
 	//SDL_Event event;
-	PVector one_x (5000.0,0);
-	PVector one_y (0,30000.0);
+	PVector one_x (mass*10*PIXELS_PER_METER,0);
+	PVector one_y (0,mass*2*9.81*PIXELS_PER_METER);
 	while(!input.empty()) {
 	//	event = input.front();
 	//	if(event.type == SDL_KEYDOWN) {
