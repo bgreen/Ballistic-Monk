@@ -41,18 +41,18 @@ bool Object::is_hit(Object* other) {
 		// calculate sides for this hitbox
 		int a_left, a_right, a_top, a_bottom;
 		a_left = position.x + (*this_iter).x;
-		a_right = a_left + (*this_iter).w;
+		a_right = a_left + ((*this_iter).w);
 		a_top = position.y + (*this_iter).y;
-		a_bottom = a_top - (*this_iter).h;
+		a_bottom = a_top - ((*this_iter).h);
 		
 		std::vector<SDL_Rect>::iterator other_iter = other->hitboxes.begin();
 		while(other_iter != other->hitboxes.end()) {
 			// calculate sides for that hitbox
 			int b_left, b_right, b_top, b_bottom;
 			b_left = other->position.x + (*other_iter).x;
-			b_right = b_left + (*other_iter).w;
+			b_right = b_left + ((*other_iter).w);
 			b_top = other->position.y + (*other_iter).y;
-			b_bottom = b_top - (*other_iter).h;
+			b_bottom = b_top - ((*other_iter).h);
 			// hit????
 			if(a_bottom >= b_top) return false;
 			if(a_top <= b_bottom) return false;

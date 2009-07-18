@@ -1,6 +1,7 @@
 #include "static.h"
 #include "character.h"
 #include "math.h"
+#include <stdio.h>
 
 Wall::Wall(SDL_Rect dim) {
 	position.x = dim.x;
@@ -74,7 +75,7 @@ void Wall::collide(Object* other, double dt) {
 		// the upper and lower bounds for the movement vector
 		double upper_bound, lower_bound;
 		if(o->vel.y < 0) {
-			path.y -= o->hitboxes.front().h;
+			path.y -= (o->hitboxes.front().h - 1);
 			path.top = false;
 			upper_bound = path.y - path.dy;
 			lower_bound = path.y;
@@ -83,7 +84,7 @@ void Wall::collide(Object* other, double dt) {
 			lower_bound = path.y - path.dy;
 		}
 		if(o->vel.x > 0) {
-			path.x += o->hitboxes.front().w;
+			path.x += (o->hitboxes.front().w - 1);
 			path.left = false;
 		}
 		
@@ -111,7 +112,7 @@ void Wall::collide(Object* other, double dt) {
 					x = (y - b) / m;
 					break;
 				case bottom:
-					y = (position.y - hitboxes.front().h);
+					y = (position.y - (hitboxes.front().h - 1));
 					x = (y - b) / m;
 					break;
 				case left:
@@ -119,7 +120,7 @@ void Wall::collide(Object* other, double dt) {
 					y = m * x + b;
 					break;
 				case right:
-					x = (position.x + hitboxes.front().w);
+					x = (position.x + (hitboxes.front().w - 1));
 					y = m * x + b;
 					break;
 			}
