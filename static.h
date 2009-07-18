@@ -6,5 +6,5 @@
 class Wall: public Object {
 	public:
 	Wall(SDL_Rect dim);
-	void collide(Object* other);
+	void collide(Object* other, double dt);
 };

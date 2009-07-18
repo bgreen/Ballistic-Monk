@@ -8,7 +8,7 @@
 #include "fps_counter.h"
 #include "static.h"
 
-#define MAX_FPS 30
+#define MAX_FPS 60
 #define COLORKEY 0xFF00FF
 
 int main(int argc, char *argv[])
@@ -60,19 +60,25 @@ int main(int argc, char *argv[])
     players.push_back(&you);
     
     // A test wall or two
-    SDL_Rect dim = {220, 235, 200, 10};
+    SDL_Rect dim = {0, 10, 640, 10};
     Wall w (dim);
     objects.push_back(&w);
     
-    SDL_Rect dim2 = {315, 140, 10, 200};
+    SDL_Rect dim2 = {630, 480, 10, 480};
     Wall w2 (dim2);
     objects.push_back(&w2);
     
+    SDL_Rect dim3 = {440,100,200,10};
+    Wall w3 (dim3);
+    objects.push_back(&w3);
+    
     FPS_counter fps;
+    Timer time;
     
     // Game loop
     bool quit = false;
     while(!quit) {
+    	
     	char pos[20];
     	// Start timer for fps monitoring
     	fps.mark();
@@ -98,10 +104,13 @@ int main(int argc, char *argv[])
     	// move all characters
     	std::vector<Character*>::iterator character_iter;
     	character_iter = characters.begin();
+    	time.stop();
+    	double dt = time.dt_s();
     	while(character_iter != characters.end()) {
-    		(*character_iter)->handle_move();
+    		(*character_iter)->handle_move(dt);
     		character_iter++;
     	}
+    	time.start();
     	
     	// check for hits between all character-object pairs
     	std::queue<collision_pair> collisions;
@@ -125,8 +134,8 @@ int main(int argc, char *argv[])
     	// determine and apply effects of each object in a hit pair
     	while(!collisions.empty()) {
     		collision_pair c = collisions.front();
-    		c.a->collide(c.b);
-    		c.b->collide(c.a);
+    		c.a->collide(c.b, dt);
+    		c.b->collide(c.a, dt);
     		collisions.pop();
     	}
     	
@@ -149,8 +158,10 @@ int main(int argc, char *argv[])
     		(*object_iter)->handle_show(scene);
     		object_iter++;
     	}
+    	
     	// render the fps counter
     	fps.show(scene[2]);
+    	
     	for(int i=0; i<3; i++) {
     		SDL_BlitSurface(scene[i], NULL, screen, NULL);
     	}
@@ -160,6 +171,7 @@ int main(int argc, char *argv[])
     	
     	// FPS delay
     	fps.delay_until(1000/MAX_FPS);
+    	
     }
     
     return 0;

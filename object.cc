@@ -6,13 +6,13 @@
 void Object::handle_show(SDL_Surface* scene[]) {
 	SDL_Rect tmp;
 	tmp.x = position.x;
-	tmp.y = position.y;
+	tmp.y = 479 - position.y;
 	SDL_BlitSurface(sprite, NULL, scene[layer], &tmp);
 }
 
 Object::Object() {
 	position.x = 0;
-	position.y = 0;
+	position.y = 480;
 	sprite = SDL_CreateRGBSurface(SDL_SWSURFACE, 32, 32, 16, 0,0,0,0);
 	SDL_FillRect(sprite, NULL, 0xF000);
 }
@@ -43,7 +43,7 @@ bool Object::is_hit(Object* other) {
 		a_left = position.x + (*this_iter).x;
 		a_right = a_left + (*this_iter).w;
 		a_top = position.y + (*this_iter).y;
-		a_bottom = a_top + (*this_iter).h;
+		a_bottom = a_top - (*this_iter).h;
 		
 		std::vector<SDL_Rect>::iterator other_iter = other->hitboxes.begin();
 		while(other_iter != other->hitboxes.end()) {
@@ -52,10 +52,10 @@ bool Object::is_hit(Object* other) {
 			b_left = other->position.x + (*other_iter).x;
 			b_right = b_left + (*other_iter).w;
 			b_top = other->position.y + (*other_iter).y;
-			b_bottom = b_top + (*other_iter).h;
+			b_bottom = b_top - (*other_iter).h;
 			// hit????
-			if(a_bottom <= b_top) return false;
-			if(a_top >= b_bottom) return false;
+			if(a_bottom >= b_top) return false;
+			if(a_top <= b_bottom) return false;
 			if(a_right <= b_left) return false;
 			if(a_left >= b_right) return false;
 			other_iter++;
@@ -65,7 +65,7 @@ bool Object::is_hit(Object* other) {
 	return true;
 }
 
-void Object::collide(Object* other) {
+void Object::collide(Object* other, double dt) {
 	printf("Object says ouch\n");
 	fflush(stdout);
 	return;

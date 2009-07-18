@@ -1,10 +1,10 @@
 #include <SDL/SDL.h>
 #include <vector>
-
+#include "physics.h"
 
 struct coord {
-	float x;
-	float y;
+	double x;
+	double y;
 };
 
 class Object {
@@ -23,7 +23,7 @@ class Object {
 	
 	bool is_hit(Object* other);
 	
-	virtual void collide(Object* other);
+	virtual void collide(Object* other, double dt);
 	
 	protected:
 	SDL_Surface* sprite;
