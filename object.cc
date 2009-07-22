@@ -13,6 +13,7 @@ void Object::handle_show(SDL_Surface* scene[]) {
 Object::Object() {
 	position.x = 0;
 	position.y = 480;
+	friction = 1.3;
 	sprite = SDL_CreateRGBSurface(SDL_SWSURFACE, 32, 32, 16, 0,0,0,0);
 	SDL_FillRect(sprite, NULL, 0xF000);
 }
@@ -20,6 +21,7 @@ Object::Object() {
 Object::Object(int x, int y, int l) {
 	position.x = x;
 	position.y = y;
+	friction = 1;
 	layer = l;
 	sprite = SDL_CreateRGBSurface(SDL_SWSURFACE, 32, 32, 16, 0,0,0,0);
 	SDL_FillRect(sprite, NULL, 0xF000);
@@ -66,7 +68,5 @@ bool Object::is_hit(Object* other) {
 }
 
 void Object::collide(Object* other, double dt) {
-	printf("Object says ouch\n");
-	fflush(stdout);
 	return;
 }

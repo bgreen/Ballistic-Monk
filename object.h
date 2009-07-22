@@ -15,6 +15,7 @@ struct coord {
 class Object {
 	public:
 	int layer;
+	float friction;
 	struct coord position;
 	std::vector<SDL_Rect> hitboxes;
 	

@@ -52,6 +52,15 @@ int main(int argc, char *argv[])
     std::vector<Character*> characters;
     std::vector<Player*> players;
     
+   
+    // a dummy
+    Character dummy (200, 480);
+    SDL_Rect hitbox1 = {0, 0, 32, 32};
+    dummy.add_hitbox(hitbox1);
+    objects.push_back(&dummy);
+    characters.push_back(&dummy);
+    dummy.ID = 1;
+   
     // Create the Player
     Player you;
     SDL_Rect hitbox = {0, 0, 32, 32};
@@ -59,6 +68,9 @@ int main(int argc, char *argv[])
     objects.push_back(&you);
     characters.push_back(&you);
     players.push_back(&you);
+    you.ID = 0;
+    
+    
     
     // A test wall or two
     SDL_Rect dim = {0, 10, 640, 10};
@@ -135,7 +147,6 @@ int main(int argc, char *argv[])
     	// determine and apply effects of each object in a hit pair
     	while(!collisions.empty()) {
     		collision_pair c = collisions.front();
-    		c.a->collide(c.b, dt);
     		c.b->collide(c.a, dt);
     		collisions.pop();
     	}

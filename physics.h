@@ -3,8 +3,7 @@
 
 #include "stdint.h"
 
-#define AIR_VISCOSITY 0.2
-#define PIXELS_PER_METER 16.67
+#define PIXELS_PER_METER 20
 
 class PVector {
 	public:

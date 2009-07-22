@@ -1,0 +1,3 @@
+In a low-velocity collision between two characters, they should not get stuck on each other. This happens when an object accelerates into another.
+
+Should there be an elastic collision between character and wall? flinging something against the wall would be cooler this way

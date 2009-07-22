@@ -137,12 +137,25 @@ void Wall::collide(Object* other, double dt) {
 		}
 		
 		// compute how far to move the object back
+		float f_friction = o->weight.y * o->friction * friction;
 		if(hit_where == top) {
 			o->position.y = position.y + o->hitboxes.front().h;
 			o->vel.y = 0;
+			if(abs(o->vel.x) < abs(dt*f_friction/o->mass)) {
+				o->vel.x = 0;
+			} else if (o->vel.x > 0) {
+				o->force.x += f_friction;
+			} else {
+				o->force.x -= f_friction;
+			}
 		} else if(hit_where == bottom) {
 			o->position.y = position.y - hitboxes.front().h;
 			o->vel.y = 0;
+			if (o->vel.x > 0) {
+				o->force.x += f_friction;
+			} else {
+				o->force.x -= f_friction;
+			}
 		} else if(hit_where == left) {
 			o->position.x = position.x - o->hitboxes.front().w;
 			o->vel.x = 0;

@@ -14,10 +14,14 @@ class Character: public Object {
 	PVector weight;
 	PVector force;
 	PVector vel;
+	bool mod_flag;
+	int ID;
 
 	Character();
+	Character(float x, float y);
 	
 	int hit_where(Object* other, double dt);
+	void collide(Object* other, double dt);
 	
 	void handle_move(double dt);
 	
@@ -31,7 +35,7 @@ class Player: public Character {
 	
 	std::queue<SDL_Event> input;
 	
-	void collide(Object* other, double dt);
+	//void collide(Object* other, double dt);
 	void handle_input();
 };
 
