@@ -7,7 +7,7 @@
 FPS_counter::FPS_counter() {
 	fps = 0;
 	fps_disp = NULL;
-	font = TTF_OpenFont("../font/FreeMono.ttf", 12);
+	font = TTF_OpenFont("font/FreeMono.ttf", 12);
 	text_color.r = 0xFF;
 	text_color.g = 0xFF;
 	text_color.b = 0xFF;

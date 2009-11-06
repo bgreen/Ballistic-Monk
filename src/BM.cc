@@ -14,11 +14,14 @@
 
 int main(int argc, char *argv[])
 {
+    printf("Let's start ...\n");
     SDL_Surface *screen;
     
     /************************/
     /* SDL Initialization	*/
     /************************/
+    
+    printf("initializing video ...\n");
     
     if ( SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO|SDL_INIT_TIMER) < 0 ) {
         fprintf(stderr, "Unable to init SDL: %s\n", SDL_GetError());
@@ -33,10 +36,12 @@ int main(int argc, char *argv[])
     }
     
     if (TTF_Init() == -1) {
-    	fprintf(stderr, "Unable to init ttf engine");
+    	fprintf(stderr, "Unable to init ttf engine\n");
     	exit(1);
     }
     
+    
+    printf("Loading objects ...\n");
     // Create Rendering Surfaces
     Uint32 color_key = SDL_MapRGB(screen->format, 0xff, 0x00, 0xff);
     SDL_Surface* background = SDL_CreateRGBSurface(SDL_SWSURFACE, 640, 480, 16, 0,0,0,0);
@@ -76,6 +81,8 @@ int main(int argc, char *argv[])
     FPS_counter fps;
     Timer time;
     
+    printf("Entering game loop ...\n");
+    
     // Game loop
     bool quit = false;
     while(!quit) {
@@ -84,6 +91,7 @@ int main(int argc, char *argv[])
     	// Start timer for fps monitoring
     	fps.mark();
     	
+    	printf("Events ...\n");
 		/************/
     	/*	Events	*/
     	/************/
@@ -98,6 +106,7 @@ int main(int argc, char *argv[])
     	}
     	you.handle_input();
     	
+    	printf("Logic ...\n");
     	/************/
     	/*	Logic	*/
     	/************/
@@ -141,18 +150,20 @@ int main(int argc, char *argv[])
     	}
     	
     	
-    	
+    	printf("Rendering ...\n");
     	/****************/
     	/*	Rendering	*/
     	/****************/
     	
     	SDL_BlitSurface(background, NULL, screen, NULL);
     	
+    	printf("clear scene ...\n");
     	// clear scene
     	for(int i=0; i<3; i++) {
     		SDL_FillRect(scene[i], NULL, color_key);
     	}
     	
+    	printf("blit objects ...\n");
     	// Blit all objects to appropriate layers
     	object_iter = objects.begin();
     	while(object_iter != objects.end()) {
@@ -160,6 +171,7 @@ int main(int argc, char *argv[])
     		object_iter++;
     	}
     	
+    	printf("fps counter ...\n");
     	// render the fps counter
     	fps.show(scene[2]);
     	
@@ -167,11 +179,13 @@ int main(int argc, char *argv[])
     		SDL_BlitSurface(scene[i], NULL, screen, NULL);
     	}
     	
+    	printf("blit to screen ...\n");
     	// show that shit
     	SDL_Flip(screen);
     	
     	// FPS delay
     	fps.delay_until(1000/MAX_FPS);
+    	printf("End loop ...\n");
     	
     }
     
